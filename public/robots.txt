@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://thirstymachines.com/sitemap.xml
+Sitemap: https://www.thirstymachines.com/sitemap.xml
