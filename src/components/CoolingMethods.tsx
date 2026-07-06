@@ -2,9 +2,12 @@ import type { ReactNode } from 'react';
 
 interface Method {
   image: string;
-  dots: boolean[]; // true = filled/active
+  dots: boolean[]; // true = filled/active (water use)
   tagColor: string;
   tag: string;
+  energyDots: boolean[]; // true = filled/active (energy use)
+  energyTagColor: string;
+  energyTag: string;
   title: string;
   body: ReactNode;
 }
@@ -15,24 +18,33 @@ const METHODS: Method[] = [
     dots: [true, true, true],
     tagColor: '#1a6ea8',
     tag: 'High water use',
+    energyDots: [true, false, false],
+    energyTagColor: '#5b7183',
+    energyTag: 'Low energy use',
     title: 'Evaporative & cooling towers',
-    body: 'Warm water is trickled through towers where a fraction evaporates, carrying heat into the air, the same way sweating cools skin. Cheap and very effective, but the evaporated water is gone for good. This is the thirstiest method, and the biggest dots on the map above almost all use it, especially in hot, dry regions.',
+    body: "Warm water is trickled through towers where a fraction evaporates, carrying heat into the air, the same way sweating cools skin. It's cheap and effective, but the evaporated water leaves the local supply, rejoining the water cycle elsewhere. This is the thirstiest method, and the biggest dots on the map above almost all use it.",
   },
   {
     image: '/images/cool-air.svg',
     dots: [true, false, false],
     tagColor: '#5b7183',
     tag: 'Low water use',
+    energyDots: [true, true, true],
+    energyTagColor: '#c17d1f',
+    energyTag: 'High energy use',
     title: 'Air & free cooling',
-    body: 'When the outside air is cold enough, big fans simply push it through the servers, no evaporation needed. It uses far more electricity for fans but very little water, which is why cool-climate sites in Finland, Denmark and the Pacific Northwest score so low. Its catch: it barely works during heat waves, exactly when water is scarcest.',
+    body: 'When the outside air is cold enough, big fans push it through the servers, no evaporation needed. It uses far more electricity for fans but very little water, which is why cool-climate sites in Finland, Denmark and the Pacific Northwest score so low. Its catch: it barely works during heat waves, exactly when water is scarcest.',
   },
   {
     image: '/images/cool-closedloop.svg',
-    dots: [true, false, false],
+    dots: [true, true, false],
     tagColor: '#5b7183',
-    tag: 'Low ongoing use',
+    tag: 'Moderate water use',
+    energyDots: [true, true, false],
+    energyTagColor: '#5b7183',
+    energyTag: 'Moderate energy use',
     title: 'Closed-loop & liquid cooling',
-    body: 'The same water (or coolant) circulates in a sealed loop, often piped right onto the chips, and is chilled and reused instead of evaporated. A large volume is filled once, then topped up only slightly. Increasingly used for dense AI hardware; it shifts the burden back toward electricity, but keeps day-to-day water draw small.',
+    body: "The same water (or coolant) circulates in a sealed loop piped right onto the chips, but that heat still has to go somewhere: most facilities pair this with cooling towers for the final rejection step, so it's not as water-free as it sounds. Increasingly used for dense AI hardware, it shifts more of the burden toward electricity, landing at moderate rather than low.",
   },
 ];
 
@@ -72,7 +84,7 @@ export function CoolingMethods() {
                 <img src={m.image} alt="" width={320} height={150} style={{ width: '100%', height: 'auto', display: 'block' }} />
               </div>
               <div style={{ padding: 24 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 10 }}>
                   {m.dots.map((filled, i) => (
                     <svg key={i} width="11" height="16" viewBox="0 -1 16 24" fill="none">
                       <path
@@ -85,6 +97,22 @@ export function CoolingMethods() {
                   ))}
                   <span style={{ marginLeft: 8, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, color: m.tagColor }}>
                     {m.tag}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 16 }}>
+                  {m.energyDots.map((filled, i) => (
+                    <svg key={i} width="11" height="16" viewBox="-1 -1 18 26" fill="none">
+                      <path
+                        d="M0,0 L0,13.2 L4.8,13.2 L4.8,24 L16,9.6 L9.6,9.6 L16,0 Z"
+                        fill={filled ? '#e0a52e' : '#e2e9ee'}
+                        stroke={filled ? 'none' : '#cdd8df'}
+                        strokeWidth={filled ? 0 : 1.5}
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  ))}
+                  <span style={{ marginLeft: 8, fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase', fontWeight: 700, color: m.energyTagColor }}>
+                    {m.energyTag}
                   </span>
                 </div>
                 <h3 style={{ fontFamily: "'Source Serif 4',serif", fontWeight: 600, fontSize: '1.25rem', margin: '0 0 8px', letterSpacing: '-0.01em' }}>

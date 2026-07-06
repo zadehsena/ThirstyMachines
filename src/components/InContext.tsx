@@ -5,7 +5,7 @@ import { compactAmount, gallonsToDisplay, useUnit } from '../unit';
 interface Category {
   label: string;
   color: string;
-  /** Annual usage in gallons, used to position the bar on the log scale and compute the display amount. */
+  /** Annual usage in gallons, used to position the bar on the scale and compute the display amount. */
   value: number;
   multiplier: string | null; // null for the baseline row
   multiplierColor: string;
@@ -133,25 +133,37 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-// Log scale anchored at 100B gallons. The top of the scale is calibrated so the
-// largest category (Meat industry) fills MAX_BAR_PCT of the row, leaving a
-// reserved margin for its trailing multiplier label without needing to shrink
-// any bar to make room (which would erase the visual difference between bars).
-const SCALE_MIN = Math.log10(100e9);
+// A power scale (value^SCALE_EXPONENT), calibrated off the actual data rather
+// than a fixed floor. A pure log scale spaces every category evenly by order
+// of magnitude, which flattens out just how much bigger the biggest numbers
+// really are; this gentler curve still keeps the smallest category from
+// disappearing, but lets the largest ones dominate the way they actually do.
+// The smallest category (Data centers) is pinned to MIN_BAR_PCT, and the
+// largest (Meat industry) to MAX_BAR_PCT, leaving a reserved margin for its
+// trailing multiplier label without needing to shrink any bar to make room
+// (which would erase the visual difference between bars).
+const SCALE_EXPONENT = 0.35;
+const MIN_BAR_PCT = 3;
 const MAX_BAR_PCT = 80;
+const MIN_CATEGORY_VALUE = Math.min(...CATEGORIES.map((c) => c.value));
 const MAX_CATEGORY_VALUE = Math.max(...CATEGORIES.map((c) => c.value));
-const SCALE_MAX = SCALE_MIN + (Math.log10(MAX_CATEGORY_VALUE) - SCALE_MIN) / (MAX_BAR_PCT / 100);
-
-const TICKS = [
-  { label: '100B', value: 100e9 },
-  { label: '1T', value: 1e12 },
-  { label: '10T', value: 10e12 },
-  { label: '100T', value: 100e12 },
-];
+const MIN_SCALED = Math.pow(MIN_CATEGORY_VALUE, SCALE_EXPONENT);
+const MAX_SCALED = Math.pow(MAX_CATEGORY_VALUE, SCALE_EXPONENT);
 
 function pctForValue(value: number) {
-  return ((Math.log10(value) - SCALE_MIN) / (SCALE_MAX - SCALE_MIN)) * 100;
+  return MIN_BAR_PCT + ((Math.pow(value, SCALE_EXPONENT) - MIN_SCALED) * (MAX_BAR_PCT - MIN_BAR_PCT)) / (MAX_SCALED - MIN_SCALED);
 }
+
+// Ticks evenly spaced by position (not by "nice" round values) since this
+// scale isn't logarithmic — fixed round numbers like 100B/1T/10T/100T would
+// land at wildly uneven, sometimes overlapping positions.
+const TICK_COUNT = 4;
+const TICKS = Array.from({ length: TICK_COUNT }, (_, i) => {
+  const pct = MIN_BAR_PCT + (i / (TICK_COUNT - 1)) * (MAX_BAR_PCT - MIN_BAR_PCT);
+  const scaled = MIN_SCALED + ((pct - MIN_BAR_PCT) * (MAX_SCALED - MIN_SCALED)) / (MAX_BAR_PCT - MIN_BAR_PCT);
+  const value = Math.pow(scaled, 1 / SCALE_EXPONENT);
+  return { pct, value };
+});
 
 export function InContext() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -193,8 +205,9 @@ export function InContext() {
         </h2>
         <p style={{ margin: '0 0 32px', color: '#5b7183', fontSize: 15.5, maxWidth: 660, textWrap: 'pretty', lineHeight: 1.6 }}>
           The counter is a big number, but so is almost everything at global scale. Set against other things the
-          world pours water into each year, data centers are today a small, fast-growing slice. Bars are shown
-          on a log scale so smaller categories stay visible; the multiplier is the honest comparison.
+          world pours water into each year, data centers are today a small, fast-growing slice. Bars are compressed
+          just enough to keep the smallest categories visible, without hiding how much bigger the largest ones
+          really are; the multiplier is the honest comparison.
         </p>
 
         <div ref={cardRef} style={{ background: '#fff', border: '1px solid #dbe3e9', borderRadius: 12, padding: 'clamp(20px,3vw,32px)' }}>
@@ -209,8 +222,8 @@ export function InContext() {
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
               {TICKS.map((tick) => (
                 <div
-                  key={tick.label}
-                  style={{ position: 'absolute', left: `${pctForValue(tick.value)}%`, top: 0, bottom: 0, width: 1, background: '#eef2f5' }}
+                  key={tick.pct}
+                  style={{ position: 'absolute', left: `${tick.pct}%`, top: 0, bottom: 0, width: 1, background: '#eef2f5' }}
                 />
               ))}
             </div>
@@ -267,10 +280,10 @@ export function InContext() {
             <div style={{ position: 'relative', height: 16, marginTop: 4 }}>
               {TICKS.map((tick, i) => (
                 <span
-                  key={tick.label}
+                  key={tick.pct}
                   style={{
                     position: 'absolute',
-                    left: `${pctForValue(tick.value)}%`,
+                    left: `${tick.pct}%`,
                     transform: i === 0 ? 'none' : i === TICKS.length - 1 ? 'translateX(-100%)' : 'translateX(-50%)',
                     fontFamily: "'IBM Plex Mono',monospace",
                     fontSize: 12,
