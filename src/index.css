@@ -195,3 +195,9 @@ button {
     transform: scale(0.72);
   }
 }
+
+@media (max-width: 700px) {
+  .map-note-desktop-only {
+    display: none;
+  }
+}

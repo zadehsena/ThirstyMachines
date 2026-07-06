@@ -333,7 +333,10 @@ export function MapSection() {
               <div style={{ fontSize: 12.5, color: '#8a9aa6', marginBottom: 14 }}>
                 estimated {unitWord} / year · ≈ {Math.round(sel.ml / 2.5).toLocaleString('en-US')} pools
               </div>
-              <div style={{ fontSize: 13, color: '#5b7183', lineHeight: 1.5, textWrap: 'pretty', borderTop: '1px solid #eef2f5', paddingTop: 12 }}>
+              <div
+                className="map-note-desktop-only"
+                style={{ fontSize: 13, color: '#5b7183', lineHeight: 1.5, textWrap: 'pretty', borderTop: '1px solid #eef2f5', paddingTop: 12 }}
+              >
                 {sel.note}
               </div>
             </div>
