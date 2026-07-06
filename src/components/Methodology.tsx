@@ -3,7 +3,7 @@ const ANNUAL_ESTIMATE_BN = 560;
 export function Methodology() {
   return (
     <section id="methodology" style={{ background: '#0f2b3d', color: '#dce6ed' }}>
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: 'clamp(56px,8vw,96px) clamp(20px,5vw,48px)' }}>
+      <div style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(56px,8vw,96px) clamp(20px,5vw,48px)' }}>
         <div style={{ fontSize: 12, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#6fb0d8', fontWeight: 600, marginBottom: 18 }}>
           Methodology
         </div>
@@ -24,8 +24,8 @@ export function Methodology() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))',
-            gap: '28px 40px',
+            gridTemplateColumns: 'repeat(auto-fit,minmax(160px,1fr))',
+            gap: '26px 28px',
             fontSize: 14.5,
             lineHeight: 1.65,
             color: '#a9c1cf',
@@ -46,14 +46,14 @@ export function Methodology() {
           </div>
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>What's not counted</div>
-            These are <span style={{ color: '#fff' }}>direct, on-site</span> figures — the water evaporated in cooling towers
+            These are <span style={{ color: '#fff' }}>direct, on-site</span> figures: the water evaporated in cooling towers
             and used on-premises. They exclude the often-larger <span style={{ color: '#fff' }}>indirect</span> water
             footprint of generating the electricity the site consumes, which can multiply the total several times over.
           </div>
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>Why it's uncertain</div>
             Most operators do not publish site-level water data, and definitions of "water use" vary. Treat every number here
-            as an <span style={{ color: '#fff' }}>order-of-magnitude estimate</span> meant to convey scale — not a precise
+            as an <span style={{ color: '#fff' }}>order-of-magnitude estimate</span> meant to convey scale, not a precise
             audit. Corrections and better data are welcome.
           </div>
         </div>

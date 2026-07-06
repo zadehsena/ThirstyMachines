@@ -100,6 +100,14 @@ export function MapSection() {
         const zoom = d3
           .zoom<SVGSVGElement, unknown>()
           .scaleExtent([1, 8])
+          .extent([
+            [0, 0],
+            [w, h],
+          ])
+          .translateExtent([
+            [0, 0],
+            [w, h],
+          ])
           .on('zoom', (ev) => g.attr('transform', ev.transform.toString()));
         svg.call(zoom).on('click', () => setSelected(null));
 
@@ -116,6 +124,13 @@ export function MapSection() {
           );
           const npath = d3.geoPath(np as unknown as d3.GeoProjection);
           svg.attr('viewBox', `0 0 ${nw} ${nh}`).attr('height', nh);
+          zoom.extent([
+            [0, 0],
+            [nw, nh],
+          ]).translateExtent([
+            [0, 0],
+            [nw, nh],
+          ]);
           g.attr('transform', null);
           svg.property('__zoom', d3.zoomIdentity);
           g.selectAll<SVGPathElement, GeoJSON.Feature>('path').attr('d', npath);
