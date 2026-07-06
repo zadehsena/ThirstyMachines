@@ -5,8 +5,14 @@ export type Unit = 'L' | 'gal';
 export const GALLONS_PER_LITER = 0.264172;
 export const LITERS_PER_GALLON = 1 / GALLONS_PER_LITER;
 
-/** Global estimated direct water use of AI/cloud data centers, in liters/year. */
-export const GLOBAL_ANNUAL_WATER_LITERS = 560e9;
+/**
+ * Global estimated DIRECT (on-site cooling) water use of AI/cloud data centers,
+ * in liters/year — per IEA's "Energy demand from AI" report (2023 estimate).
+ * This deliberately excludes indirect water (used generating the electricity
+ * data centers consume, which IEA estimates at roughly 3x this figure), so it
+ * stays consistent with the per-site map estimates, which are also direct-only.
+ */
+export const GLOBAL_ANNUAL_WATER_LITERS = 140e9;
 
 interface UnitContextValue {
   unit: Unit;

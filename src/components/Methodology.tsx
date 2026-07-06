@@ -43,8 +43,17 @@ export function Methodology() {
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>The counter</div>
             The running total assumes roughly <span style={{ color: '#fff' }}>{annualBn} billion {unitWord}</span> of
-            direct water consumption globally per year, spread evenly across the year. It counts from January 1, 2026. The
-            global figure is triangulated from national reports (e.g.{' '}
+            direct, on-site water consumption globally per year, spread evenly across the year. It counts from January 1,
+            2026. This follows the{' '}
+            <a
+              href="https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#9fc3dc' }}
+            >
+              International Energy Agency's 2023 estimate
+            </a>{' '}
+            for global data centers, corroborated by{' '}
             <a
               href="https://eta.lbl.gov/publications/2024-lbnl-data-center-energy-usage-report"
               target="_blank"
@@ -53,7 +62,7 @@ export function Methodology() {
             >
               Lawrence Berkeley National Laboratory's 2024 estimate
             </a>{' '}
-            of ~{lblBn} billion {unitWord} of direct data-center water use in 2023) scaled to worldwide capacity.
+            of ~{lblBn} billion {unitWord} of direct U.S. data-center water use in 2023.
           </div>
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>Per-site estimates</div>
