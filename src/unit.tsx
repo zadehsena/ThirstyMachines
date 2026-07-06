@@ -5,6 +5,9 @@ export type Unit = 'L' | 'gal';
 export const GALLONS_PER_LITER = 0.264172;
 export const LITERS_PER_GALLON = 1 / GALLONS_PER_LITER;
 
+/** Global estimated direct water use of AI/cloud data centers, in liters/year. */
+export const GLOBAL_ANNUAL_WATER_LITERS = 560e9;
+
 interface UnitContextValue {
   unit: Unit;
   setUnit: (u: Unit) => void;

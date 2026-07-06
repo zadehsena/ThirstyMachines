@@ -1,11 +1,10 @@
 import { useEffect, useRef } from 'react';
-import { GALLONS_PER_LITER, useUnit } from '../unit';
+import { GALLONS_PER_LITER, GLOBAL_ANNUAL_WATER_LITERS, useUnit } from '../unit';
 
-const ANNUAL_ESTIMATE_BN = 560;
 const YEAR_START = Date.UTC(2026, 0, 1);
 
 function rate() {
-  return (ANNUAL_ESTIMATE_BN * 1e9) / (365 * 24 * 3600);
+  return GLOBAL_ANNUAL_WATER_LITERS / (365 * 24 * 3600);
 }
 
 export function Hero() {

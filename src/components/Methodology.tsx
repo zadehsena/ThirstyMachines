@@ -1,14 +1,13 @@
-import { GALLONS_PER_LITER, useUnit } from '../unit';
+import { GALLONS_PER_LITER, GLOBAL_ANNUAL_WATER_LITERS, useUnit } from '../unit';
 
-// Both figures below are authored as "billions of liters"; converted to billions
-// of the display unit when the page-wide toggle is set to gallons.
-const ANNUAL_ESTIMATE_BN_LITERS = 560;
+// Authored as "billions of liters"; converted to billions of the display unit
+// when the page-wide toggle is set to gallons.
 const LBL_ESTIMATE_BN_LITERS = 66;
 
 export function Methodology() {
   const { unit, unitWord } = useUnit();
   const factor = unit === 'gal' ? GALLONS_PER_LITER : 1;
-  const annualBn = (ANNUAL_ESTIMATE_BN_LITERS * factor).toLocaleString(undefined, { maximumFractionDigits: 1 });
+  const annualBn = ((GLOBAL_ANNUAL_WATER_LITERS / 1e9) * factor).toLocaleString(undefined, { maximumFractionDigits: 1 });
   const lblBn = (LBL_ESTIMATE_BN_LITERS * factor).toLocaleString(undefined, { maximumFractionDigits: 1 });
 
   return (

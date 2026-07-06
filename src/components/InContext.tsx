@@ -10,6 +10,8 @@ interface Category {
   multiplier: string | null; // null for the baseline row
   multiplierColor: string;
   icon: ReactNode;
+  sourceLabel: string;
+  sourceUrl: string;
 }
 
 function IconServer() {
@@ -82,42 +84,52 @@ const CATEGORIES: Category[] = [
   {
     label: 'Data centers',
     color: '#1a6ea8',
-    value: 228e9,
+    value: 147.94e9,
     multiplier: null,
     multiplierColor: '#1a6ea8',
     icon: <IconServer />,
+    sourceLabel: 'Methodology',
+    sourceUrl: '#methodology',
   },
   {
     label: 'Golf courses',
     color: '#7cc39a',
-    value: 547e9,
-    multiplier: '2.4×',
+    value: 912.5e9,
+    multiplier: '6.2×',
     multiplierColor: '#0f2b3d',
     icon: <IconGolf />,
+    sourceLabel: 'GolfToday',
+    sourceUrl: 'https://golftoday.co.uk/drip-by-drip-golfs-pending-water-crisis/',
   },
   {
     label: 'Fast fashion',
     color: '#e6a6bc',
-    value: 5.5e12,
-    multiplier: '24×',
+    value: 20.87e12,
+    multiplier: '141×',
     multiplierColor: '#0f2b3d',
     icon: <IconHanger />,
+    sourceLabel: 'UN Environment',
+    sourceUrl: 'https://news.un.org/en/story/2019/03/1035161',
   },
   {
-    label: 'Fossil fuel plants',
+    label: 'Energy production',
     color: '#98a1a7',
-    value: 48.5e12,
-    multiplier: '213×',
+    value: 97.74e12,
+    multiplier: '661×',
     multiplierColor: '#0f2b3d',
     icon: <IconFactory />,
+    sourceLabel: 'IEA',
+    sourceUrl: 'https://www.iea.org/commentaries/clean-energy-can-help-to-ease-the-water-crisis',
   },
   {
     label: 'Meat industry',
     color: '#e0a17f',
-    value: 72e12,
-    multiplier: '316×',
+    value: 639.9e12,
+    multiplier: '4,326×',
     multiplierColor: '#4a2f1e',
     icon: <IconCow />,
+    sourceLabel: 'Mekonnen & Hoekstra',
+    sourceUrl: 'https://www.waterfootprint.org/resources/Mekonnen-Hoekstra-2012-WaterFootprintFarmAnimalProducts_1.pdf',
   },
 ];
 
@@ -180,8 +192,8 @@ export function InContext() {
           How much is that, really?
         </h2>
         <p style={{ margin: '0 0 32px', color: '#5b7183', fontSize: 15.5, maxWidth: 660, textWrap: 'pretty', lineHeight: 1.6 }}>
-          The counter is a big number, but so is almost everything at national scale. Set against other things the
-          United States pours water into each year, data centers are today a small, fast-growing slice. Bars are shown
+          The counter is a big number, but so is almost everything at global scale. Set against other things the
+          world pours water into each year, data centers are today a small, fast-growing slice. Bars are shown
           on a log scale so smaller categories stay visible; the multiplier is the honest comparison.
         </p>
 
@@ -190,7 +202,7 @@ export function InContext() {
             Annual water usage
           </div>
           <div style={{ fontSize: 11, letterSpacing: '0.14em', textTransform: 'uppercase', color: '#8a9aa6', fontWeight: 600, marginBottom: 26 }}>
-            United States · estimated
+            Worldwide · estimated
           </div>
 
           <div style={{ position: 'relative' }}>
@@ -210,9 +222,19 @@ export function InContext() {
                     {cat.icon}
                     <span style={{ fontWeight: 600, fontSize: 14.5 }}>{cat.label}</span>
                   </div>
-                  <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 13, color: '#8a9aa6' }}>
-                    {compactAmount(gallonsToDisplay(cat.value, unit))} {unitAbbr}
-                  </span>
+                  <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                    <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 13, color: '#8a9aa6' }}>
+                      {compactAmount(gallonsToDisplay(cat.value, unit))} {unitAbbr}
+                    </div>
+                    <a
+                      href={cat.sourceUrl}
+                      target={cat.sourceUrl.startsWith('#') ? undefined : '_blank'}
+                      rel={cat.sourceUrl.startsWith('#') ? undefined : 'noopener noreferrer'}
+                      style={{ fontSize: 10.5, color: '#8a9aa6', textDecoration: 'underline' }}
+                    >
+                      {cat.sourceLabel}
+                    </a>
+                  </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div
@@ -267,8 +289,14 @@ export function InContext() {
           The takeaway isn't that data-center water use doesn't matter. It's{' '}
           <em style={{ fontStyle: 'italic', color: '#0f2b3d' }}>where</em> and{' '}
           <em style={{ fontStyle: 'italic', color: '#0f2b3d' }}>how fast</em>. A single thirsty campus dropped into an
-          already drought-stressed town can strain a local supply long before it registers on a national chart like
+          already drought-stressed town can strain a local supply long before it registers on a global chart like
           this one.
+        </p>
+        <p style={{ margin: '16px 0 0', color: '#8a9aa6', fontSize: 12.5, lineHeight: 1.6, maxWidth: 680, textWrap: 'pretty' }}>
+          Note: these figures mix methodologies. Data centers, golf courses, and energy production are direct
+          water withdrawal; fast fashion and meat reflect full water-footprint estimates that include upstream
+          supply-chain water (e.g. growing feed crops or cotton), which is why they run so much higher. Sources
+          are linked next to each figure above.
         </p>
       </div>
     </section>
