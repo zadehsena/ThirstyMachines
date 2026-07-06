@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import type { Topology } from 'topojson-specification';
-import { COMPANY_COLORS, SITES, type Operator, type Site } from '../data';
+import { COMPANY_COLORS, OPERATORS, SITES, type Operator, type Site } from '../data';
 import { compactAmount, litersToDisplay, useUnit, type Unit } from '../unit';
 
 const DOT_SCALE = 0.52;
@@ -188,10 +188,7 @@ export function MapSection() {
 
   const chips: { label: string; key: Operator | null; color: string | null }[] = [
     { label: 'All sites', key: null, color: null },
-    { label: 'Google', key: 'Google', color: COMPANY_COLORS.Google },
-    { label: 'Amazon', key: 'Amazon', color: COMPANY_COLORS.Amazon },
-    { label: 'Microsoft', key: 'Microsoft', color: COMPANY_COLORS.Microsoft },
-    { label: 'Meta', key: 'Meta', color: COMPANY_COLORS.Meta },
+    ...OPERATORS.map((op) => ({ label: op, key: op, color: COMPANY_COLORS[op] })),
   ];
 
   const sel = selected != null ? SITES[selected] : null;
@@ -342,7 +339,7 @@ export function MapSection() {
         </div>
 
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 18, marginTop: 16, fontSize: 12.5, color: '#5b7183' }}>
-          {(['Google', 'Amazon', 'Microsoft', 'Meta'] as Operator[]).map((op) => (
+          {OPERATORS.map((op) => (
             <div key={op} style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
               <span style={{ width: 11, height: 11, borderRadius: '50%', background: COMPANY_COLORS[op] }} />
               {op}

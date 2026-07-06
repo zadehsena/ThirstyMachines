@@ -21,8 +21,11 @@ export function Header() {
         borderBottom: '1px solid #dbe3e9',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-        <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#1a6ea8' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <svg width="14" height="14" viewBox="0 0 32 32" style={{ flexShrink: 0 }}>
+          <path d="M16 2C16 2 6 14.5 6 20a10 10 0 0 0 20 0C26 14.5 16 2 16 2Z" fill="#1a6ea8" />
+          <ellipse cx="12.3" cy="23.5" rx="2.1" ry="3.1" fill="#ffffff" opacity="0.32" transform="rotate(-18 12.3 23.5)" />
+        </svg>
         <span style={{ fontWeight: 700, letterSpacing: '-0.01em', fontSize: 15 }}>
           Thirsty Machines
         </span>

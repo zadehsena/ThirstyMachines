@@ -1,4 +1,4 @@
-export type Operator = 'Google' | 'Amazon' | 'Microsoft' | 'Meta';
+export type Operator = 'Google' | 'Amazon' | 'Microsoft' | 'Meta' | 'Oracle' | 'Apple' | 'Alibaba';
 
 export interface Site {
   name: string;
@@ -11,11 +11,16 @@ export interface Site {
   note: string;
 }
 
+export const OPERATORS: Operator[] = ['Google', 'Amazon', 'Microsoft', 'Meta', 'Oracle', 'Apple', 'Alibaba'];
+
 export const COMPANY_COLORS: Record<Operator, string> = {
   Google: 'oklch(0.58 0.13 250)',
   Amazon: 'oklch(0.62 0.13 55)',
   Microsoft: 'oklch(0.58 0.13 165)',
   Meta: 'oklch(0.58 0.13 300)',
+  Oracle: 'oklch(0.60 0.16 25)',
+  Apple: 'oklch(0.60 0.17 350)',
+  Alibaba: 'oklch(0.68 0.15 85)',
 };
 
 // Curated estimates. ml = estimated million liters of direct water / year.
@@ -42,4 +47,12 @@ export const SITES: Site[] = [
   { name: 'Mesa', operator: 'Meta', loc: 'Arizona, USA', lat: 33.38, lng: -111.68, ml: 900, note: 'Designed for a closed-loop system that reuses cooling water many times over.' },
   { name: 'Fort Worth', operator: 'Meta', loc: 'Texas, USA', lat: 32.76, lng: -97.33, ml: 1300, note: 'A sprawling North Texas campus in a fast-growing, water-stressed metro.' },
   { name: 'Odense', operator: 'Meta', loc: 'Odense, Denmark', lat: 55.40, lng: 10.39, ml: 300, note: 'Recovers waste heat to warm thousands of nearby homes, and uses efficient cooling.' },
+  { name: 'Ashburn', operator: 'Oracle', loc: 'Virginia, USA', lat: 39.09, lng: -77.47, ml: 2000, note: 'An Oracle Cloud region sitting inside the same humid Northern Virginia corridor as its biggest cloud rivals.' },
+  { name: 'San Jose', operator: 'Oracle', loc: 'California, USA', lat: 37.34, lng: -121.89, ml: 650, note: 'A dense urban site in a state that has repeatedly asked data centers to curb water use during drought years.' },
+  { name: 'Phoenix', operator: 'Oracle', loc: 'Arizona, USA', lat: 33.45, lng: -112.07, ml: 1300, note: 'Sits in the same overdrawn desert aquifer system as several rivals’ Phoenix-area campuses.' },
+  { name: 'Maiden', operator: 'Apple', loc: 'North Carolina, USA', lat: 35.58, lng: -81.20, ml: 450, note: 'Apple’s first custom-built data center; captures rainwater on-site to offset cooling and irrigation draw.' },
+  { name: 'Reno', operator: 'Apple', loc: 'Nevada, USA', lat: 39.53, lng: -119.81, ml: 900, note: 'Expanded repeatedly since 2012 in a high-desert climate where water rights are tightly contested.' },
+  { name: 'Waukee', operator: 'Apple', loc: 'Iowa, USA', lat: 41.61, lng: -93.89, ml: 700, note: 'A flagship campus built alongside local commitments to renewable energy and water-stewardship projects.' },
+  { name: 'Hangzhou', operator: 'Alibaba', loc: 'Zhejiang, China', lat: 30.27, lng: 120.15, ml: 1200, note: 'Sits near Alibaba’s home city, in a humid subtropical climate that pushes up evaporative cooling demand.' },
+  { name: 'Ulanqab', operator: 'Alibaba', loc: 'Inner Mongolia, China', lat: 41.02, lng: 113.13, ml: 350, note: 'Part of China’s “East Data, West Compute” push; a cold, dry climate allows heavy use of free-air cooling.' },
 ];

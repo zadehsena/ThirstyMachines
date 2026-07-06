@@ -45,9 +45,9 @@ export function gallonsToDisplay(gallons: number, unit: Unit) {
 }
 
 /** Format a large number with a B/T/M suffix, e.g. 5.5e12 -> "5.5T". */
-export function compactAmount(value: number): string {
-  if (value >= 1e12) return (value / 1e12).toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'T';
-  if (value >= 1e9) return (value / 1e9).toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'B';
-  if (value >= 1e6) return (value / 1e6).toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'M';
+export function compactAmount(value: number, maximumFractionDigits = 2): string {
+  if (value >= 1e12) return (value / 1e12).toLocaleString(undefined, { maximumFractionDigits }) + 'T';
+  if (value >= 1e9) return (value / 1e9).toLocaleString(undefined, { maximumFractionDigits }) + 'B';
+  if (value >= 1e6) return (value / 1e6).toLocaleString(undefined, { maximumFractionDigits }) + 'M';
   return Math.round(value).toLocaleString('en-US');
 }

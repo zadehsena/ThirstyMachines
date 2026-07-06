@@ -121,9 +121,15 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-// Log scale from 100B to 100T gallons, spanning three decades.
+// Log scale anchored at 100B gallons. The top of the scale is calibrated so the
+// largest category (Meat industry) fills MAX_BAR_PCT of the row, leaving a
+// reserved margin for its trailing multiplier label without needing to shrink
+// any bar to make room (which would erase the visual difference between bars).
 const SCALE_MIN = Math.log10(100e9);
-const SCALE_MAX = Math.log10(100e12);
+const MAX_BAR_PCT = 80;
+const MAX_CATEGORY_VALUE = Math.max(...CATEGORIES.map((c) => c.value));
+const SCALE_MAX = SCALE_MIN + (Math.log10(MAX_CATEGORY_VALUE) - SCALE_MIN) / (MAX_BAR_PCT / 100);
+
 const TICKS = [
   { label: '100B', value: 100e9 },
   { label: '1T', value: 1e12 },
@@ -227,6 +233,7 @@ export function InContext() {
                       color: cat.multiplierColor,
                       letterSpacing: cat.multiplier === null ? '0.02em' : undefined,
                       whiteSpace: 'nowrap',
+                      flexShrink: 0,
                     }}
                   >
                     {cat.multiplier === null ? 'baseline · 1×' : cat.multiplier}
@@ -246,9 +253,10 @@ export function InContext() {
                     fontFamily: "'IBM Plex Mono',monospace",
                     fontSize: 12,
                     color: '#8a9aa6',
+                    whiteSpace: 'nowrap',
                   }}
                 >
-                  {compactAmount(gallonsToDisplay(tick.value, unit))} {unitAbbr}
+                  {compactAmount(gallonsToDisplay(tick.value, unit), 0)} {unitAbbr}
                 </span>
               ))}
             </div>

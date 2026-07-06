@@ -1,0 +1,5 @@
+# Update the Sitemap URL below once this is deployed to its real domain.
+User-agent: *
+Allow: /
+
+Sitemap: https://thirstymachines.com/sitemap.xml

@@ -55,18 +55,18 @@ export function Hero() {
           textAlign: 'center',
         }}
       >
-      <div
+      <h1
         style={{
+          margin: '0 0 22px',
           fontSize: 12,
           letterSpacing: '0.16em',
           textTransform: 'uppercase',
           color: '#1a6ea8',
           fontWeight: 600,
-          marginBottom: 22,
         }}
       >
-        Estimated water consumed by data centers · 2026
-      </div>
+        Estimated water used by AI data centers · 2026
+      </h1>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
         <div
           ref={counterRef}
