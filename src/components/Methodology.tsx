@@ -24,11 +24,11 @@ export function Methodology() {
             margin: '0 0 24px',
             color: '#ffffff',
             letterSpacing: '-0.01em',
-            maxWidth: '18ch',
-            textWrap: 'balance',
           }}
         >
-          How we estimate what companies won't say
+          How we estimate what
+          <br />
+          companies won't say
         </h2>
         <div
           style={{
