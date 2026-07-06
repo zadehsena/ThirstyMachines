@@ -3,20 +3,34 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import type { Topology } from 'topojson-specification';
 import { COMPANY_COLORS, SITES, type Operator, type Site } from '../data';
+import { compactAmount, litersToDisplay, useUnit, type Unit } from '../unit';
 
 const DOT_SCALE = 0.52;
 
-function fmtBillions(ml: number) {
-  return (ml / 1000).toLocaleString(undefined, { maximumFractionDigits: 2 }) + 'B L';
+/** `liters` is the canonical amount (already converted from million-liters). */
+function fmtAmount(liters: number, unit: Unit, approx = false) {
+  const display = litersToDisplay(liters, unit);
+  return (approx ? '~' : '') + compactAmount(display) + (unit === 'gal' ? ' gal' : ' L');
+}
+
+function baseRadius(d: Site) {
+  return Math.sqrt(d.ml) * DOT_SCALE;
 }
 
 export function MapSection() {
   const mapRef = useRef<HTMLDivElement>(null);
   const circlesRef = useRef<d3.Selection<SVGCircleElement, Site, SVGGElement, unknown> | null>(null);
   const drawnRef = useRef(false);
+  // Current zoom scale factor, used to counter-scale dot radius/stroke so their
+  // on-screen size stays constant (and matches the legend) at any zoom level.
+  const zoomKRef = useRef(1);
 
   const [company, setCompany] = useState<Operator | null>(null);
   const [selected, setSelected] = useState<number | null>(null);
+
+  const { unit, unitWord } = useUnit();
+  const unitRef = useRef(unit);
+  unitRef.current = unit;
 
   useEffect(() => {
     const el = mapRef.current;
@@ -72,14 +86,14 @@ export function MapSection() {
           .join('circle')
           .attr('cx', (d) => proj([d.lng, d.lat])![0])
           .attr('cy', (d) => proj([d.lng, d.lat])![1])
-          .attr('r', (d) => Math.sqrt(d.ml) * DOT_SCALE)
+          .attr('r', baseRadius)
           .attr('fill', (d) => COMPANY_COLORS[d.operator])
           .attr('fill-opacity', 0.5)
           .attr('stroke', (d) => COMPANY_COLORS[d.operator])
           .attr('stroke-width', 1.2)
           .style('cursor', 'pointer')
           .on('mouseenter', (_e, d) => {
-            tip.innerHTML = `<b>${d.operator} · ${d.name}</b><br>~${fmtBillions(d.ml)} / year`;
+            tip.innerHTML = `<b>${d.operator} · ${d.name}</b><br>${fmtAmount(d.ml * 1e6, unitRef.current, true)} / year`;
             tip.style.opacity = '1';
           })
           .on('mousemove', (e: MouseEvent) => {
@@ -108,7 +122,11 @@ export function MapSection() {
             [0, 0],
             [w, h],
           ])
-          .on('zoom', (ev) => g.attr('transform', ev.transform.toString()));
+          .on('zoom', (ev) => {
+            g.attr('transform', ev.transform.toString());
+            zoomKRef.current = ev.transform.k;
+            circles.attr('r', (d) => baseRadius(d) / ev.transform.k);
+          });
         svg.call(zoom).on('click', () => setSelected(null));
 
         resizeHandler = () => {
@@ -133,8 +151,12 @@ export function MapSection() {
           ]);
           g.attr('transform', null);
           svg.property('__zoom', d3.zoomIdentity);
+          zoomKRef.current = 1;
           g.selectAll<SVGPathElement, GeoJSON.Feature>('path').attr('d', npath);
-          circles.attr('cx', (d) => np([d.lng, d.lat])![0]).attr('cy', (d) => np([d.lng, d.lat])![1]);
+          circles
+            .attr('cx', (d) => np([d.lng, d.lat])![0])
+            .attr('cy', (d) => np([d.lng, d.lat])![1])
+            .attr('r', baseRadius);
         };
         window.addEventListener('resize', resizeHandler);
 
@@ -161,7 +183,7 @@ export function MapSection() {
       .attr('fill-opacity', (d) => (comp && d.operator !== comp ? 0.03 : 0.5))
       .attr('stroke-opacity', (d) => (comp && d.operator !== comp ? 0.06 : 1))
       .style('pointer-events', (d) => (comp && d.operator !== comp ? 'none' : 'all'))
-      .attr('stroke-width', (d) => (sel != null && SITES[sel] === d ? 2.6 : 1.2));
+      .attr('stroke-width', (d) => (sel != null && SITES[sel] === d ? 2.6 : 1.2) / zoomKRef.current);
   }
 
   const chips: { label: string; key: Operator | null; color: string | null }[] = [
@@ -248,15 +270,15 @@ export function MapSection() {
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 14 }}>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
                 <span style={{ display: 'block', width: 14, height: 14, borderRadius: '50%', background: 'rgba(26,110,168,0.4)', border: '1px solid #1a6ea8' }} />
-                ~0.3B L
+                {fmtAmount(0.3e9, unit, true)}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
                 <span style={{ display: 'block', width: 26, height: 26, borderRadius: '50%', background: 'rgba(26,110,168,0.4)', border: '1px solid #1a6ea8' }} />
-                ~1.5B L
+                {fmtAmount(1.5e9, unit, true)}
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
                 <span style={{ display: 'block', width: 40, height: 40, borderRadius: '50%', background: 'rgba(26,110,168,0.4)', border: '1px solid #1a6ea8' }} />
-                ~4B L
+                {fmtAmount(4e9, unit, true)}
               </div>
             </div>
           </div>
@@ -307,10 +329,10 @@ export function MapSection() {
               </div>
               <div style={{ fontSize: 13, color: '#5b7183', marginBottom: 16 }}>{sel.loc}</div>
               <div style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 26, fontWeight: 500, color: '#0f2b3d', letterSpacing: '-0.01em' }}>
-                {(sel.ml / 1000).toLocaleString(undefined, { maximumFractionDigits: 2 })}B
+                {compactAmount(litersToDisplay(sel.ml * 1e6, unit))}
               </div>
               <div style={{ fontSize: 12.5, color: '#8a9aa6', marginBottom: 14 }}>
-                estimated liters / year · ≈ {Math.round(sel.ml / 2.5).toLocaleString('en-US')} pools
+                estimated {unitWord} / year · ≈ {Math.round(sel.ml / 2.5).toLocaleString('en-US')} pools
               </div>
               <div style={{ fontSize: 13, color: '#5b7183', lineHeight: 1.5, textWrap: 'pretty', borderTop: '1px solid #eef2f5', paddingTop: 12 }}>
                 {sel.note}

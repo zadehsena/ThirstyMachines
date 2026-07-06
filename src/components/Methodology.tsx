@@ -1,6 +1,16 @@
-const ANNUAL_ESTIMATE_BN = 560;
+import { GALLONS_PER_LITER, useUnit } from '../unit';
+
+// Both figures below are authored as "billions of liters"; converted to billions
+// of the display unit when the page-wide toggle is set to gallons.
+const ANNUAL_ESTIMATE_BN_LITERS = 560;
+const LBL_ESTIMATE_BN_LITERS = 66;
 
 export function Methodology() {
+  const { unit, unitWord } = useUnit();
+  const factor = unit === 'gal' ? GALLONS_PER_LITER : 1;
+  const annualBn = (ANNUAL_ESTIMATE_BN_LITERS * factor).toLocaleString(undefined, { maximumFractionDigits: 1 });
+  const lblBn = (LBL_ESTIMATE_BN_LITERS * factor).toLocaleString(undefined, { maximumFractionDigits: 1 });
+
   return (
     <section id="methodology" style={{ background: '#0f2b3d', color: '#dce6ed' }}>
       <div style={{ maxWidth: 1080, margin: '0 auto', padding: 'clamp(56px,8vw,96px) clamp(20px,5vw,48px)' }}>
@@ -33,10 +43,10 @@ export function Methodology() {
         >
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>The counter</div>
-            The running total assumes roughly <span style={{ color: '#fff' }}>{ANNUAL_ESTIMATE_BN} billion liters</span> of
+            The running total assumes roughly <span style={{ color: '#fff' }}>{annualBn} billion {unitWord}</span> of
             direct water consumption globally per year, spread evenly across the year. It counts from January 1, 2026. The
-            global figure is triangulated from national reports (e.g. the U.S. Lawrence Berkeley Lab estimate of ~66 billion
-            liters of direct data-center water use in 2023) scaled to worldwide capacity.
+            global figure is triangulated from national reports (e.g. the U.S. Lawrence Berkeley Lab estimate of ~{lblBn} billion{' '}
+            {unitWord} of direct data-center water use in 2023) scaled to worldwide capacity.
           </div>
           <div>
             <div style={{ color: '#fff', fontWeight: 600, marginBottom: 6 }}>Per-site estimates</div>

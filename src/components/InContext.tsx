@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
+import { compactAmount, gallonsToDisplay, useUnit } from '../unit';
 
 interface Category {
   label: string;
   color: string;
-  amount: string;
-  /** Annual usage in gallons, used to position the bar on the log scale. */
+  /** Annual usage in gallons, used to position the bar on the log scale and compute the display amount. */
   value: number;
   multiplier: string | null; // null for the baseline row
   multiplierColor: string;
@@ -82,7 +82,6 @@ const CATEGORIES: Category[] = [
   {
     label: 'Data centers',
     color: '#1a6ea8',
-    amount: '228B gal',
     value: 228e9,
     multiplier: null,
     multiplierColor: '#1a6ea8',
@@ -91,7 +90,6 @@ const CATEGORIES: Category[] = [
   {
     label: 'Golf courses',
     color: '#7cc39a',
-    amount: '547B gal',
     value: 547e9,
     multiplier: '2.4×',
     multiplierColor: '#0f2b3d',
@@ -100,7 +98,6 @@ const CATEGORIES: Category[] = [
   {
     label: 'Fast fashion',
     color: '#e6a6bc',
-    amount: '5.5T gal',
     value: 5.5e12,
     multiplier: '24×',
     multiplierColor: '#0f2b3d',
@@ -109,7 +106,6 @@ const CATEGORIES: Category[] = [
   {
     label: 'Fossil fuel plants',
     color: '#98a1a7',
-    amount: '48.5T gal',
     value: 48.5e12,
     multiplier: '213×',
     multiplierColor: '#0f2b3d',
@@ -118,7 +114,6 @@ const CATEGORIES: Category[] = [
   {
     label: 'Meat industry',
     color: '#e0a17f',
-    amount: '72T gal',
     value: 72e12,
     multiplier: '316×',
     multiplierColor: '#4a2f1e',
@@ -143,6 +138,7 @@ function pctForValue(value: number) {
 export function InContext() {
   const cardRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const { unit, unitAbbr } = useUnit();
 
   useEffect(() => {
     const el = cardRef.current;
@@ -208,7 +204,9 @@ export function InContext() {
                     {cat.icon}
                     <span style={{ fontWeight: 600, fontSize: 14.5 }}>{cat.label}</span>
                   </div>
-                  <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 13, color: '#8a9aa6' }}>{cat.amount}</span>
+                  <span style={{ fontFamily: "'IBM Plex Mono',monospace", fontSize: 13, color: '#8a9aa6' }}>
+                    {compactAmount(gallonsToDisplay(cat.value, unit))} {unitAbbr}
+                  </span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                   <div
@@ -250,7 +248,7 @@ export function InContext() {
                     color: '#8a9aa6',
                   }}
                 >
-                  {tick.label}
+                  {compactAmount(gallonsToDisplay(tick.value, unit))} {unitAbbr}
                 </span>
               ))}
             </div>

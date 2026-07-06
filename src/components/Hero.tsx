@@ -1,10 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { GALLONS_PER_LITER, useUnit } from '../unit';
 
 const ANNUAL_ESTIMATE_BN = 560;
 const YEAR_START = Date.UTC(2026, 0, 1);
-const GALLONS_PER_LITER = 0.264172;
-
-type Unit = 'L' | 'gal';
 
 function rate() {
   return (ANNUAL_ESTIMATE_BN * 1e9) / (365 * 24 * 3600);
@@ -14,7 +12,7 @@ export function Hero() {
   const counterRef = useRef<HTMLDivElement>(null);
   const poolRef = useRef<HTMLSpanElement>(null);
   const rafRef = useRef<number>(0);
-  const [unit, setUnit] = useState<Unit>('L');
+  const { unit, setUnit, unitWord } = useUnit();
 
   useEffect(() => {
     const factor = unit === 'gal' ? GALLONS_PER_LITER : 1;
@@ -33,7 +31,6 @@ export function Hero() {
     return () => cancelAnimationFrame(rafRef.current);
   }, [unit]);
 
-  const unitWord = unit === 'gal' ? 'gallons' : 'liters';
   const rateStr = Math.round(rate() * (unit === 'gal' ? GALLONS_PER_LITER : 1)).toLocaleString('en-US');
 
   const chipBase = {
