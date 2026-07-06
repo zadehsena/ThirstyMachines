@@ -38,7 +38,7 @@ export function MapSection() {
     drawnRef.current = true;
 
     const w = el.clientWidth || 900;
-    const h = Math.max(420, Math.min(560, Math.round(w * 0.52)));
+    const h = Math.max(220, Math.min(560, Math.round(w * 0.52)));
 
     const svg = d3
       .select(el)
@@ -132,7 +132,7 @@ export function MapSection() {
         resizeHandler = () => {
           const nw = el.clientWidth;
           if (!nw) return;
-          const nh = Math.max(420, Math.min(560, Math.round(nw * 0.52)));
+          const nh = Math.max(220, Math.min(560, Math.round(nw * 0.52)));
           const np = d3.geoNaturalEarth1().fitExtent(
             [
               [10, 10],
@@ -245,9 +245,10 @@ export function MapSection() {
         </div>
 
         <div style={{ position: 'relative', background: '#ffffff', border: '1px solid #dbe3e9', borderRadius: 12, overflow: 'hidden' }}>
-          <div ref={mapRef} style={{ position: 'relative', width: '100%', minHeight: 420 }} />
+          <div ref={mapRef} style={{ position: 'relative', width: '100%', minHeight: 220 }} />
 
           <div
+            className="map-legend"
             style={{
               position: 'absolute',
               left: 16,
@@ -259,6 +260,7 @@ export function MapSection() {
               padding: '12px 14px',
               fontSize: 11.5,
               color: '#5b7183',
+              transformOrigin: 'bottom left',
             }}
           >
             <div style={{ textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600, color: '#8a9aa6', fontSize: 10, marginBottom: 10 }}>

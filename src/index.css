@@ -189,3 +189,9 @@ button {
     scroll-snap-align: start;
   }
 }
+
+@media (max-width: 480px) {
+  .map-legend {
+    transform: scale(0.72);
+  }
+}
